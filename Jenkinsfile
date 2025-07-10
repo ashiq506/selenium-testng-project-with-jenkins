@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.8.10' // Must be configured in Jenkins (Manage Jenkins → Global Tool Configuration)
+        maven 'Maven 3.8.6'
         jdk 'JDK 11'
     }
 
@@ -15,17 +15,14 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                bat 'mvn clean test'
+                bat 'mvn clean test' // use `sh` instead of `bat` if on Linux
             }
         }
     }
 
     post {
         always {
-            // Publish JUnit test results
             junit 'target/surefire-reports/*.xml'
-
-            // Archive HTML ExtentReport
             archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
         }
     }
