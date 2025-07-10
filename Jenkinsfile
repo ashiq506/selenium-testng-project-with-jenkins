@@ -2,37 +2,31 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.10'
-        jdk 'JDK 17'
-    }
-
-    environment {
-        MAVEN_OPTS = "-Dmaven.test.failure.ignore=false"
+        maven 'Maven 3.8.10' // Must be configured in Jenkins (Manage Jenkins → Global Tool Configuration)
+        jdk 'JDK 11'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/ashiq506/selenium-testng-project-with-jenkins.git', branch: 'main'
+                git 'https://github.com/ashiq506/selenium-testng-project-with-jenkins.git'
             }
         }
 
-        stage('Build & Test') {
+        stage('Build and Test') {
             steps {
-                sh 'mvn clean test'
-            }
-
-        stage('Archive Reports') {
-            steps {
-                archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
-                junit 'target/surefire-reports/*.xml'
+                bat 'mvn clean test'
             }
         }
     }
 
     post {
         always {
-            echo 'Build complete.'
+            // Publish JUnit test results
+            junit 'target/surefire-reports/*.xml'
+
+            // Archive HTML ExtentReport
+            archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
         }
     }
 }
