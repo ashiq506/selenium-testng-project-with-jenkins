@@ -2,20 +2,20 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.10'
-        jdk 'JDK 17'
+        maven 'Maven 3.8.6'
+        jdk 'JDK 11'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ashiq506/selenium-testng-project-with-jenkins.git'
+                git branch: 'main', url: 'https://github.com/ashiq506/selenium-testng-project-with-jenkins.git'
             }
         }
 
         stage('Build and Test') {
             steps {
-                bat 'mvn clean test' // use `sh` instead of `bat` if on Linux
+                bat 'mvn clean test'
             }
         }
     }
