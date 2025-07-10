@@ -21,12 +21,18 @@ pipeline {
             steps {
                 sh 'mvn clean test'
             }
+
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
+                junit 'target/surefire-reports/*.xml'
+            }
         }
     }
 
     post {
         always {
-            junit 'target/surefire-reports/*.xml'
+            echo 'Build complete.'
         }
     }
 }
